@@ -9,9 +9,6 @@ export default function SearchBar(props) {
   const { width } = Dimensions.get('window');
 
   const [searchText, setSearchText] = useState('')
-  const [state, setState] = useState({
-    results: []
-  });
 
   const handleInput = (e) => {
     setSearchText(e);
@@ -24,24 +21,25 @@ export default function SearchBar(props) {
       useNativeDriver: false,
     }).start();
 
-    const results = await API.get(`/${searchText}`, {
-      headers: { Authorization: "Token 0a11e88ea9f075dc8a660525b3eb557cb25ea789" },
-    });
+    try {
+      var results = await API.get(`/${searchText}`, {
+        headers: { Authorization: "Token 0a11e88ea9f075dc8a660525b3eb557cb25ea789" },
+      });
+      console.log(results);
+      if (typeof (results.data) !== 'string' || results.data !== []) {
+        if (results.data.word !== undefined) {
+          var word = results.data.word
+          var definitions = results.data.definitions
+          var wordMeaning = { word, definitions }
+          await AsyncStorage.setItem('favourites', JSON.stringify(wordMeaning));
 
-    setState(prevState => {
-      return { ...prevState, results: results.data }
-    })
-
-    if (typeof (state.results) !== 'string' || state.results !== []) {
-      if (state.results.word !== undefined) {
-        var word = state.results.word
-        var definitions = state.results.definitions
-        var wordMeaning = { word, definitions }
-        await AsyncStorage.setItem('favourites', JSON.stringify(wordMeaning));
-
-        await props.onResponse(state.results);
+          await props.onResponse(results.data);
+        }
       }
+    } catch (error) {
+      Alert.alert('Nothing Found');
     }
+
   }
 
   return (

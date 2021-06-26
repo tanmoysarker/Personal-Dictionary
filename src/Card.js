@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 
-
+const img = 'https://cdn.shopify.com/s/files/1/0002/4680/8603/products/sjDBHUW_1600x1600.png?v=1606994170'
 const Card = props => {
 
   const [viewData, setViewData] = useState([]);
@@ -12,7 +12,6 @@ const Card = props => {
     return () => rerender();
   })
   const rerender = async () => {
-    console.log('Called rerender');
     var definitions = props.meaning.definitions;
     console.log('response>>123', definitions);
     if (viewData !== []) {
@@ -20,28 +19,36 @@ const Card = props => {
     }
 
   }
-  return (
-    <View style={styles.card}>
-      { viewData.map(v => {
-        return (
-          <View>
-            <Image
-              style={styles.tinyImage}
-              source={{ uri: v.image_url === null ? null : v.image_url }}
-            />
-            <Text style={styles.textStyleFirst}>{v.type === null ? null : v.type}</Text>
-            <Text style={styles.textStyleSecond}>{v.definition === null ? null : v.definition}</Text>
-            <Text style={styles.textStyleThird}>{v.example === null ? null : `"${v.example}"`}</Text>
-          </View>
-        )
-      })
-        //  : 
-        // <Text>No data found</Text>
-      }
+  if (viewData === []){
+    return (
+      <View style={styles.card}>
+        <Text>No data found</Text>
+      </View>
+    )
+  }else {
+    var showData = props.meaning.definitions;
+    return (
+      <View style={styles.card}>
+        { showData.map((v,i) => {
+          return (
+            <View key={i}>
+              <Image
+                style={styles.tinyImage}
+                source={{ uri: v.image_url === null ? img : v.image_url }}
+              />
+              <Text style={styles.textStyleFirst}>{v.type === null ? null : v.type}</Text>
+              <Text style={styles.textStyleSecond}>{v.definition === null ? null : v.definition}</Text>
+              <Text style={styles.textStyleThird}>{v.example === null ? null : `"${v.example}"`}</Text>
+            </View>
+          )
+        })
+        }
+  
+  
+      </View>
+    );
+  }
 
-
-    </View>
-  );
 };
 const styles = StyleSheet.create({
   card: {

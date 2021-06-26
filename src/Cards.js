@@ -6,10 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Cards = props => {
 
   useEffect(async () => {
-    var favouriteData = await AsyncStorage.getItem('favourites')
+    var favouriteData = await AsyncStorage.getItem('list')
     // var mergeFavouriteData = await AsyncStorage.mergeItem('favourites', favouriteData)
     console.log('render merge !', favouriteData);
-    return () => console.log('unmounting...', favouriteData);
+    return () => console.log('unmounting...', props.list);
   })
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Switch, ScrollView, TextInput, Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Text, Alert, ActivityIndicator, Dimensions, I18nManager } from 'react-native';
 import SearchBar from './src/SearchBar';
 import { Container, SearchButtonContainer, SearchButtonText, FavouriteButtonContainer, FavouriteButtonText, SaveButtonContainer, SaveButtonText } from './styles';
@@ -13,6 +13,11 @@ export default function App() {
   });
   const [view, setView] = useState(false);
   const [toggle, setToggle] = useState(true);
+
+  useEffect(() => {
+    console.log('App.js called')
+    return () => getData;
+  })
 
   const getData = async (value) => {
 
@@ -30,23 +35,25 @@ export default function App() {
   const onPressSave = async () => {
     console.log('current data', data)
     var favouriteData = await AsyncStorage.getItem('list')
-    if (favouriteData !== null) {
-      var allData = [data, ...favouriteData]
-      console.log('All Data>>', allData)
-    }
+    // AsyncStorage.getItem('favourites')
+    // .then((favourites) => {
+    //       const prevData = JSON.parse(favourites);
+    //       const newData = favourites ? [...prevData,...data] : [];
+    //       AsyncStorage.setItem('contacts', JSON.stringify(newData));
+    // });
+    if (favouriteData === null) {
+      await AsyncStorage.setItem('list',JSON.stringify(data))
+    }else {
+      //var allData = await AsyncStorage.mergeItem('list',JSON.stringify(data))
+      await console.log('Check 1',AsyncStorage.getItem('list'));
+      console.log('Check 2',JSON.stringify(data));
+      var PreviousfavouriteData = await AsyncStorage.getItem('list')
+      var allData = [JSON.stringify(data), PreviousfavouriteData]
+      await AsyncStorage.setItem('list',JSON.stringify(allData))
 
-    // const USER_2 = {
-    //   name: 'Sarah',
-    //   age: 21,
-    //   hobby: 'cars',
-    //   traits: {
-    //     eyes: 'green',
-    //   }
-    // }
-    // var mergeData = await AsyncStorage.mergeItem('favourites',JSON.stringify(USER_2))
-    // const currentUser = await AsyncStorage.getItem('favourites')
-    // console.log('current data2',currentUser)
-    // setData(mergeData);
+    }
+    console.log('All Data 2>>>',allData )
+    console.log('All Data 3>>>',PreviousfavouriteData)
 
   }
   const SearchPageButton = ({ onPress, title }) => (
@@ -65,11 +72,9 @@ export default function App() {
       <SaveButtonText>{title}</SaveButtonText>
     </SaveButtonContainer>
   );
-  console.log('render App.js>>', data);
 
 
   return (
-
     <Container>
       <ScrollView>
         <View style={{ flexDirection: 'row', paddingTop: 50, alignSelf: 'center' }}>
@@ -92,7 +97,7 @@ export default function App() {
           </View>
           :
           <View>
-            <Cards />
+            <Cards list={'allData'}/>
           </View>
         }
       </ScrollView>
