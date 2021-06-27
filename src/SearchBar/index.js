@@ -15,7 +15,6 @@ export default function SearchBar(props) {
   }
 
   onSearch = async () => {
-    console.log('TExt', searchText)
     Animated.spring(animation, {
       toValue: width * 0.7,
       useNativeDriver: false,

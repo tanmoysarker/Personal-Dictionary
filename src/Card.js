@@ -7,13 +7,10 @@ const Card = props => {
   const [viewData, setViewData] = useState([]);
 
   useEffect(() => {
-    console.log('rerender!', props.meaning);
-
     return () => rerender();
   })
   const rerender = async () => {
     var definitions = props.meaning.definitions;
-    console.log('response>>123', definitions);
     if (viewData !== []) {
       await setViewData(props.meaning.definitions)
     }
