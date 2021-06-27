@@ -12,7 +12,7 @@ const Cards = props => {
    
     getData();
 
-  })
+  },[])
 
   const getData = async () => {
     var favouriteData = await AsyncStorage.getItem('list')

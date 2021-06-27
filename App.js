@@ -34,25 +34,23 @@ export default function App() {
   }
   const onPressSave = async () => {
     console.log('current data', data)
-    var favouriteData = await AsyncStorage.getItem('list')
-    if (favouriteData === null) {
-      await AsyncStorage.setItem('list',JSON.stringify(data))
-    }else {
+    //await AsyncStorage.removeItem('list')
       try {
         var PreviousfavouriteData = await AsyncStorage.getItem('list')
-        console.log('Check 1',PreviousfavouriteData);
-        console.log('Check 2',JSON.stringify(data));
-        // var PreviousfavouriteData = await AsyncStorage.getItem('list')
-        var allData = [data, ...JSON.parse(PreviousfavouriteData)]
-        await AsyncStorage.setItem('list',JSON.stringify(allData))
+        if (PreviousfavouriteData === null){
+          var allData = [data, JSON.parse(PreviousfavouriteData)]
+        }else{
+          var allData = [data, ...JSON.parse(PreviousfavouriteData)]
+        }
+        var finalList = allData.filter(function( element ) {
+          return element !== null;
+        });
+        await AsyncStorage.setItem('list',JSON.stringify(finalList))
+
       } catch(e) {
         // read error
       }
-    
-
-    }
-    console.log('All Data 2>>>',allData )
-    console.log('All Data 3>>>',PreviousfavouriteData)
+   
 
   }
   const SearchPageButton = ({ onPress, title }) => (
