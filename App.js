@@ -35,21 +35,20 @@ export default function App() {
   const onPressSave = async () => {
     console.log('current data', data)
     var favouriteData = await AsyncStorage.getItem('list')
-    // AsyncStorage.getItem('favourites')
-    // .then((favourites) => {
-    //       const prevData = JSON.parse(favourites);
-    //       const newData = favourites ? [...prevData,...data] : [];
-    //       AsyncStorage.setItem('contacts', JSON.stringify(newData));
-    // });
     if (favouriteData === null) {
       await AsyncStorage.setItem('list',JSON.stringify(data))
     }else {
-      //var allData = await AsyncStorage.mergeItem('list',JSON.stringify(data))
-      await console.log('Check 1',AsyncStorage.getItem('list'));
-      console.log('Check 2',JSON.stringify(data));
-      var PreviousfavouriteData = await AsyncStorage.getItem('list')
-      var allData = [JSON.stringify(data), PreviousfavouriteData]
-      await AsyncStorage.setItem('list',JSON.stringify(allData))
+      try {
+        var PreviousfavouriteData = await AsyncStorage.getItem('list')
+        console.log('Check 1',PreviousfavouriteData);
+        console.log('Check 2',JSON.stringify(data));
+        // var PreviousfavouriteData = await AsyncStorage.getItem('list')
+        var allData = [data, ...JSON.parse(PreviousfavouriteData)]
+        await AsyncStorage.setItem('list',JSON.stringify(allData))
+      } catch(e) {
+        // read error
+      }
+    
 
     }
     console.log('All Data 2>>>',allData )

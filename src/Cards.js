@@ -1,28 +1,79 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const img = 'https://cdn.shopify.com/s/files/1/0002/4680/8603/products/sjDBHUW_1600x1600.png?v=1606994170'
 
 const Cards = props => {
+  const [savedData, setSavedData] = useState([]);
+  
 
   useEffect(async () => {
-    var favouriteData = await AsyncStorage.getItem('list')
-    // var mergeFavouriteData = await AsyncStorage.mergeItem('favourites', favouriteData)
-    console.log('render merge !', favouriteData);
-    return () => console.log('unmounting...', props.list);
+   
+    getData();
+
   })
 
-  return (
-    <View style={styles.card}>
-      <Image
-        style={styles.tinyImage}
-        source={{ uri: 'https://media.owlbot.info/dictionary/images/aaaaaaaaaaaaaaaaac.jpg.400x400_q85_box-42,0,943,900_crop_detail.jpg' }}
-      />
-      <Text style={styles.textStyleFirst}>noun</Text>
-      <Text style={styles.textStyleSecond}>a waterhole from which animals </Text>
-      <Text style={styles.textStyleThird}>"a watering hole for singles"</Text>
+  const getData = async () => {
+    var favouriteData = await AsyncStorage.getItem('list')
+  
+    var savedData = JSON.parse(favouriteData);
+    
+    var parseHeader = savedData.map(datum => {
+      return datum.word;
+    }
+    )
+    var newParsedHeader = parseHeader.filter(function( element ) {
+      return element !== undefined;
+   });
+    console.log('render merge 2', newParsedHeader);
+
+    var parsedData = savedData.map(datum => {
+      return datum.definitions;
+    }
+      )
+  
+    
+    var newParsedData = parsedData.filter(function( element ) {
+      return element !== undefined;
+   });
+    setSavedData(newParsedData.flat());
+  } 
+
+  console.log('render merge final >>', savedData );
+
+  if (savedData === []){
+    return(
+      <View style={styles.card}>
+        <Text>No data saved</Text>
+      </View>
+    )
+  }else {
+    return (
+      <View style={styles.card}>
+      { savedData.map((x,i) => {
+        // return v.map((x,i)=> {
+          return(
+            <View key={i}> 
+             <Image
+              style={styles.tinyImage}
+              source={{ uri: x.image_url === null ? img : x.image_url }}
+            />
+            <Text style={styles.textStyleFirst}>{x.type === null ? null : x.type}</Text>
+            <Text style={styles.textStyleSecond}>{x.definition === null ? null : x.definition}</Text>
+            <Text style={styles.textStyleThird}>{x.example === null ? null : `"${x.example}"`}</Text>
+          </View>
+            )
+        // })
+       
+         })
+      }
+  
+  
     </View>
-  );
+    )
+  }
+
 };
 
 
@@ -42,7 +93,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    paddingTop:10
   },
   textStyleFirst: {
     fontSize: 14,
