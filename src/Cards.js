@@ -29,15 +29,20 @@ const Cards = props => {
     console.log('render merge 2', newParsedHeader);
 
     var parsedData = savedData.map(datum => {
-      return datum.definitions;
+      var favData = datum.definitions
+      var favWord = datum.word
+      return {favData,favWord};
     }
       )
   
-    
+      
     var newParsedData = parsedData.filter(function( element ) {
       return element !== undefined;
    });
-    setSavedData(newParsedData.flat());
+
+   var listData = newParsedData.flat();
+   var uniqueList = listData.filter((v,i,a)=>a.findIndex(t=>(t.favWord === v.favWord))===i)
+   setSavedData(uniqueList);
   } 
 
   console.log('render merge final >>', savedData );
@@ -51,10 +56,11 @@ const Cards = props => {
   }else {
     return (
       <View style={styles.card}>
-      { savedData.map((x,i) => {
-        // return v.map((x,i)=> {
+      { savedData.map((v,i) => {
+        return v.favData.map((x,i)=> {
           return(
             <View key={i}> 
+            <Text style={styles.textStyle}>-> {v.favWord}</Text>
              <Image
               style={styles.tinyImage}
               source={{ uri: x.image_url === null ? img : x.image_url }}
@@ -64,7 +70,7 @@ const Cards = props => {
             <Text style={styles.textStyleThird}>{x.example === null ? null : `"${x.example}"`}</Text>
           </View>
             )
-        // })
+         })
        
          })
       }
@@ -95,6 +101,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignSelf: 'center',
     paddingTop:10
+  },
+  textStyle: {
+    fontSize: 14,
+    paddingTop: 20,
+    paddingHorizontal: 10,
+    color:'red'
   },
   textStyleFirst: {
     fontSize: 14,
