@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 
 const img = 'https://cdn.shopify.com/s/files/1/0002/4680/8603/products/sjDBHUW_1600x1600.png?v=1606994170'
+
+
 const Card = props => {
 
   const [viewData, setViewData] = useState([]);
@@ -47,6 +49,8 @@ const Card = props => {
   }
 
 };
+
+
 const styles = StyleSheet.create({
   card: {
     shadowColor: 'black',

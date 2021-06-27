@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, ScrollView, TextInput, Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Text, Alert, ActivityIndicator, Dimensions, I18nManager } from 'react-native';
+import { View, Animated, Text, Alert, Dimensions } from 'react-native';
 import { Container, Input, BoxButtonSearch, SearchIcon } from './styles';
 import API from '../Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';

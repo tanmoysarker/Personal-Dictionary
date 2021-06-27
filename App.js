@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Switch, ScrollView, TextInput, Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Text, Alert, ActivityIndicator, Dimensions, I18nManager } from 'react-native';
+import { View,ScrollView} from 'react-native';
 import SearchBar from './src/SearchBar';
 import { Container, SearchButtonContainer, SearchButtonText, FavouriteButtonContainer, FavouriteButtonText, SaveButtonContainer, SaveButtonText } from './styles';
 import Card from './src/Card';
@@ -15,13 +15,10 @@ export default function App() {
   const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
-    console.log('App.js called')
     return () => getData;
   })
 
   const getData = async (value) => {
-
-    console.log('render App.js!!', value);
     setData(value);
     setView(true);
   }
@@ -33,7 +30,6 @@ export default function App() {
     setToggle(false);
   }
   const onPressSave = async () => {
-    console.log('current data', data)
     //await AsyncStorage.removeItem('list')
       try {
         var PreviousfavouriteData = await AsyncStorage.getItem('list')
